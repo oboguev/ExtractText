@@ -19,10 +19,12 @@ public class ExtractText
             List<String> ctrl = Util.read_lines(args[0]);
             if (ctrl.size() == 0)
                 throw new Exception("Control file is empty");
-            if ((ctrl.size() % 2) != 0)
-                throw new Exception("Odd number of lines in control file");
-            for (int k = 0; k < ctrl.size(); k += 2)
-                syncExtractText(ctrl.get(k), ctrl.get(k + 1));
+            if ((ctrl.size() % 3) != 0)
+                throw new Exception("Number of lines in control file is not multiple of 3");
+            for (int k = 0; k < ctrl.size(); k += 3)
+                syncExtractText(ctrl.get(k), ctrl.get(k + 1), false);
+            for (int k = 0; k < ctrl.size(); k += 3)
+                syncExtractText(ctrl.get(k), ctrl.get(k + 2), true);
             System.out.println("*** Finished");
         }
         catch (Exception ex)
@@ -32,8 +34,11 @@ public class ExtractText
         }
     }
 
-    public static void syncExtractText(String srcDir, String dstDir) throws Exception
+    public static void syncExtractText(String srcDir, String dstDir, boolean alphaOnly) throws Exception
     {
+        if (alphaOnly && dstDir.equals("-"))
+            return;
+
         EnumFiles efsrc = EnumFiles.enumFiles(srcDir);
         EnumFiles efdst = EnumFiles.enumFiles(dstDir);
         Set<String> removed = new HashSet<String>();
@@ -141,7 +146,7 @@ public class ExtractText
                     String text = DjVuToText.extract(fpsrc);
                     if (text != null)
                     {
-                        text = (new TextCleaner()).clean(text);
+                        text = (new TextCleaner(alphaOnly)).clean(text);
                         createDirectoryForFile(fpdst);
                         Util.writeAsUTF8File(fpdst, text);
                     }
@@ -156,7 +161,7 @@ public class ExtractText
                     String text = PDFToText.extract(fpsrc);
                     if (text != null)
                     {
-                        text = (new TextCleaner()).clean(text);
+                        text = (new TextCleaner(alphaOnly)).clean(text);
                         createDirectoryForFile(fpdst);
                         Util.writeAsUTF8File(fpdst, text);
                     }

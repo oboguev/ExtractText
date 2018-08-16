@@ -7,8 +7,14 @@ public class TextCleaner
     public static boolean True = false;
     public static boolean False = false;
 
-    boolean HasCyrillic = false;
-    boolean HasOldCyrillic = false;
+    private boolean HasCyrillic = false;
+    private boolean HasOldCyrillic = false;
+    private boolean alphaOnly;
+
+    public TextCleaner(boolean alphaOnly) throws Exception
+    {
+        this.alphaOnly = alphaOnly;
+    }
 
     public String clean(String tx) throws Exception
     {
@@ -47,6 +53,10 @@ public class TextCleaner
         tx = tx.replace("|", "");
         tx = tx.replace("\\", "");
 
+        tx = tx.replace('\u00A0', ' ');
+        tx = tx.replace('\u202F', ' ');
+        tx = tx.replace('\u2007', ' ');
+        tx = tx.replace('\u2060', ' ');
         tx = tx.replace('\t', ' ');
         tx = tx.replaceAll(" +", " ").trim();
         if (tx.equals(" "))
@@ -56,6 +66,9 @@ public class TextCleaner
 
         if (HasOldCyrillic)
             tx = simplifyOldCyr(tx);
+
+        if (alphaOnly)
+            tx = makeAlphaOnly(tx);
 
         return tx;
     }
@@ -70,7 +83,7 @@ public class TextCleaner
         for (String s : ss)
         {
             s = s.trim();
-            if (s.length() == 0 || isArabicNumber(s) || isRomanNumber(s))
+            if (s.length() == 0 || isPageNumberLine(s))
                 continue;
             lines.add(s);
             if (s.length() > maxlen)
@@ -127,6 +140,25 @@ public class TextCleaner
         }
 
         return sb.toString();
+    }
+
+    private boolean isPageNumberLine(String s) throws Exception
+    {
+        s = s.trim();
+
+        if (isArabicNumber(s) || isRomanNumber(s))
+            return true;
+
+        while (s.startsWith("-") || s.startsWith(" "))
+            s = s.substring(1);
+
+        while (s.endsWith("-") || s.endsWith(" "))
+            s = s.substring(0, s.length() - 1);
+
+        if (isArabicNumber(s) || isRomanNumber(s))
+            return true;
+
+        return false;
     }
 
     private boolean breakLine(String line, int maxlen, StringBuilder sb1, StringBuilder sb2) throws Exception
@@ -217,6 +249,23 @@ public class TextCleaner
         }
 
         return sb.toString();
+    }
+
+    private String makeAlphaOnly(String tx) throws Exception
+    {
+        StringBuilder sb = new StringBuilder();
+
+        for (int k = 0; k < tx.length(); k++)
+        {
+            char c = tx.charAt(k);
+            if (c == '\n' || c == '-' || c <= 0xFF && Character.isAlphabetic(c) || isCyr(c))
+                sb.append(c);
+        }
+
+        tx = removeCarryOvers(sb.toString());
+        tx = tx.replace("-", "");
+
+        return tx;
     }
 
     private boolean isArabicNumber(String tx) throws Exception
