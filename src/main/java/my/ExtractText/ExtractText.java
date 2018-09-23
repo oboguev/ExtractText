@@ -43,44 +43,8 @@ public class ExtractText
         EnumFiles efdst = EnumFiles.enumFiles(dstDir);
         Set<String> removed = new HashSet<String>();
 
-        // remove dst HTML-s that have no corresponding source HTML
-        // remove dst HTML-s that are older than corresponding source HTML
-        for (FileInfo fidst : efdst.files)
-        {
-            if (!fidst.path.toLowerCase().endsWith(".htm") &&
-                !fidst.path.toLowerCase().endsWith(".html"))
-            {
-                continue;
-            }
-
-            String fp = efdst.root + File.separator + fidst.path;
-            boolean delete = false;
-            String orig = fidst.path;
-
-            FileInfo fisrc = efsrc.filemap.get(orig);
-            if (fisrc != null)
-            {
-                if (fisrc.lastModified > fidst.lastModified)
-                {
-                    System.out.print("Removing file " + fp + " because corresponding source HTML file is newer (will copy over))");
-                    delete = true;
-                }
-            }
-            else
-            {
-                System.out.print("Removing file " + fp + " because corresponding source HTML file no longer exists");
-                delete = true;
-            }
-
-            if (delete)
-            {
-                (new File(fp)).delete();
-                removed.add(fidst.path);
-            }
-        }
-
-        // remove TXT-s that have no corresponding PDF or DJVU-s
-        // remove TXT-s that are older than corresponding DJVU-s and PDF-s
+        // remove TXT-s that have no corresponding PDF or DJVU or HTML
+        // remove TXT-s that are older than corresponding DJVU-s and PDF-s or HTML-s 
         for (FileInfo fidst : efdst.files)
         {
             if (!fidst.path.endsWith(".txt"))
@@ -118,8 +82,7 @@ public class ExtractText
             efdst.filemap.remove(s);
         }
 
-        // For src HTML-s that have no corresponding dst HTML-s, copy them over.
-        // For DJVU-s and PDF-s that have no corresponding TXT, extract the text.
+        // For DJVU-s, PDF-s and HTML-s that have no corresponding TXT, extract the text.
         for (FileInfo fisrc : efsrc.files)
         {
             String fpsrc = efsrc.root + File.separator + fisrc.path;
@@ -128,12 +91,18 @@ public class ExtractText
             if (fisrc.path.toLowerCase().endsWith(".html") ||
                 fisrc.path.toLowerCase().endsWith(".htm"))
             {
-                // copy HTM or HTML file
-                if (!efdst.filemap.containsKey(fisrc.path))
+                // extract HTML to TXT
+                fpdst += ".txt";
+                if (!efdst.filemap.containsKey(fisrc.path + ".txt"))
                 {
-                    System.out.println("Copying HTM file " + fpsrc + " => " + fpdst);
-                    createDirectoryForFile(fpdst);
-                    Files.copy((new File(fpsrc)).toPath(), (new File(fpdst)).toPath());
+                    System.out.println("Extracting texf from HTML file " + fpsrc + " => " + fpdst);
+                    String text = HtmlToText.extract(fpsrc);
+                    if (text != null)
+                    {
+                        // text = (new TextCleaner(alphaOnly)).clean(text);
+                        createDirectoryForFile(fpdst);
+                        Util.writeAsUTF8File(fpdst, text);
+                    }
                 }
             }
             else if (fisrc.path.toLowerCase().endsWith(".djvu"))
