@@ -2,6 +2,7 @@ package my.ExtractText;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.security.Security;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +13,8 @@ public class ExtractText
 {
     public static void main(String[] args)
     {
+        Security.setProperty("crypto.policy", "unlimited");
+
         try
         {
             if (args.length != 1)

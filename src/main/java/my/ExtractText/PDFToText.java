@@ -16,6 +16,7 @@ import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecifica
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.pdfbox.Loader;
 
 public class PDFToText
 {
@@ -35,7 +36,7 @@ public class PDFToText
         try
         {
             ignore = true;
-            document = PDDocument.load(new File(fn), "");
+            document = Loader.loadPDF(new File(fn), "");
             ignore = false;
 
             AccessPermission ap = document.getCurrentAccessPermission();
@@ -79,7 +80,8 @@ public class PDFToText
                                 PDDocument subDoc = null;
                                 try
                                 {
-                                    subDoc = PDDocument.load(fis);
+                                    byte[] bytes = IOUtils.toByteArray(fis);
+                                    subDoc = Loader.loadPDF(bytes);
                                 }
                                 finally
                                 {
