@@ -98,7 +98,7 @@ public class ExtractText
                 fpdst += ".txt";
                 if (!efdst.filemap.containsKey(fisrc.path + ".txt"))
                 {
-                    System.out.println("Extracting texf from HTML file " + fpsrc + " => " + fpdst);
+                    System.out.println("Extracting text from HTML file " + fpsrc + " => " + fpdst);
                     String text = HtmlToText.extract(fpsrc);
                     if (text != null)
                     {
@@ -114,7 +114,7 @@ public class ExtractText
                 fpdst += ".txt";
                 if (!efdst.filemap.containsKey(fisrc.path + ".txt"))
                 {
-                    System.out.println("Extracting texf from DVJU file " + fpsrc + " => " + fpdst);
+                    System.out.println("Extracting text from DVJU file " + fpsrc + " => " + fpdst);
                     String text = DjVuToText.extract(fpsrc);
                     if (text != null)
                     {
@@ -126,10 +126,11 @@ public class ExtractText
             }
             else if (fisrc.path.toLowerCase().endsWith(".pdf"))
             {
+                // extract PDF to TXT
                 fpdst += ".txt";
                 if (!efdst.filemap.containsKey(fisrc.path + ".txt"))
                 {
-                    System.out.println("Extracting texf from PDF file " + fpsrc + " => " + fpdst);
+                    System.out.println("Extracting text from PDF file " + fpsrc + " => " + fpdst);
                     String text = PDFToText.extract(fpsrc);
                     if (text != null)
                     {
@@ -141,11 +142,35 @@ public class ExtractText
             }
             else if (fisrc.path.toLowerCase().endsWith(".rtf"))
             {
-                // ###
+                // extract RTF to TXT
+                fpdst += ".txt";
+                if (!efdst.filemap.containsKey(fisrc.path + ".txt"))
+                {
+                    System.out.println("Extracting text from RTF file " + fpsrc + " => " + fpdst);
+                    String text = RTFToText.extract(fpsrc);
+                    if (text != null)
+                    {
+                        text = (new TextCleaner(alphaOnly)).clean(text);
+                        createDirectoryForFile(fpdst);
+                        Util.writeAsUTF8File(fpdst, text);
+                    }
+                }
             }
             else if (fisrc.path.toLowerCase().endsWith(".doc") || fisrc.path.toLowerCase().endsWith(".docx"))
             {
-                // ###
+                // extract DOC/DOCX to TXT
+                fpdst += ".txt";
+                if (!efdst.filemap.containsKey(fisrc.path + ".txt"))
+                {
+                    System.out.println("Extracting text from DOC(X) file " + fpsrc + " => " + fpdst);
+                    String text = OfficeXToText.extract(fpsrc);
+                    if (text != null)
+                    {
+                        text = (new TextCleaner(alphaOnly)).clean(text);
+                        createDirectoryForFile(fpdst);
+                        Util.writeAsUTF8File(fpdst, text);
+                    }
+                }
             }
         }
     }
@@ -170,5 +195,4 @@ public class ExtractText
                 throw new Exception("Not a directory: " + f.getCanonicalPath());
         }
     }
-
 }

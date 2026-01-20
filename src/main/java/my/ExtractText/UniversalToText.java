@@ -16,7 +16,8 @@ public class UniversalToText
     {
         try
         {
-            String fn = "F:\\DOCS\\UKR-BOOKS\\рабочий класс\\Трукан - Роль рабочего класса в создании органов советской власти.rtf";
+            // String fn = "F:\\DOCS\\UKR-BOOKS\\рабочий класс\\Трукан - Роль рабочего класса в создании органов советской власти.rtf";
+            String fn = "F:\\ScanSnap\\экономизм\\Бернштейн\\Люксембург - Марксизм и ревизионизм.docx";
             String text = extract(fn);
             System.out.println(text);
             System.out.println("** Done");
