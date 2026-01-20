@@ -16,7 +16,7 @@
 		<javac.src.version>17</javac.src.version>
 		<javac.target.version>17</javac.target.version>
 		<jdk.version>17</jdk.version>
-		<tika.version>2.9.1</tika.version>
+		<tika.version>3.2.3</tika.version>
 	</properties>
 
 	<dependencies>
@@ -24,7 +24,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.4</version>
+			<version>3.20.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
@@ -76,15 +76,17 @@
 			<artifactId>tika-parser-microsoft-module</artifactId>
 			<version>${tika.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-parser-html-module</artifactId>
+			<version>${tika.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
-
 		<finalName>ExtractText</finalName>
-
 		<plugins>
 		</plugins>
-
 	</build>
 
 </project>

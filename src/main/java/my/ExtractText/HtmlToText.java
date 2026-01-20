@@ -9,9 +9,10 @@ import java.util.Set;
 // import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.html.HtmlParser;
+// import org.apache.tika.parser.html.HtmlParser;
 // import org.apache.tika.sax.BodyContentHandler;
 // import org.xml.sax.SAXException;
+import org.apache.tika.parser.html.JSoupParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -27,7 +28,7 @@ public class HtmlToText
             Metadata metadata = new Metadata();
             FileInputStream inputstream = new FileInputStream(new File(fn));
             ParseContext pcontext = new ParseContext();
-            HtmlParser htmlparser = new HtmlParser();
+            JSoupParser htmlparser = new JSoupParser();
             htmlparser.parse(inputstream, handler, metadata, pcontext);
             String text = handler.toString();
             if (text == null)

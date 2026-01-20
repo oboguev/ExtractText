@@ -2,7 +2,6 @@ package my.ExtractText;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.UUID;
 
 public class DjVuToText
 {

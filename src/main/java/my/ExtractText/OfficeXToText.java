@@ -2,17 +2,24 @@ package my.ExtractText;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 // import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 // import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.microsoft.ooxml.OOXMLParser;
+import org.apache.tika.sax.BodyContentHandler;
 // import org.apache.tika.sax.BodyContentHandler;
 // import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+
+import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.Parser;
 
 public class OfficeXToText
 {

@@ -1,7 +1,6 @@
 package my.ExtractText;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.security.Security;
 import java.util.HashSet;
 import java.util.List;
@@ -140,7 +139,14 @@ public class ExtractText
                     }
                 }
             }
-
+            else if (fisrc.path.toLowerCase().endsWith(".rtf"))
+            {
+                // ###
+            }
+            else if (fisrc.path.toLowerCase().endsWith(".doc") || fisrc.path.toLowerCase().endsWith(".docx"))
+            {
+                // ###
+            }
         }
     }
 

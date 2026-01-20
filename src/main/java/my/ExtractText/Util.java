@@ -2,21 +2,12 @@ package my.ExtractText;
 
 import java.util.*;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryPoolMXBean;
-import java.lang.management.MemoryUsage;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.DataFlavor;
@@ -48,7 +39,7 @@ public class Util
         System.out.flush();
         try
         {
-            Thread.currentThread().sleep(100);
+            Thread.sleep(100);
         }
         catch (Exception ex)
         {
