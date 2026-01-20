@@ -62,13 +62,14 @@ public class ExtractText
             {
                 if (fisrc.lastModified > fidst.lastModified)
                 {
-                    System.out.print("Removing text file " + fp + " because corresponding PDF/DJVU is newer (will regenerate TXT)");
+                    System.out
+                            .println("Removing text file " + fp + " because corresponding PDF/DJVU is newer (will regenerate TXT)");
                     delete = true;
                 }
             }
             else
             {
-                System.out.print("Removing text file " + fp + " because corresponding PDF/DJVU no longer exists");
+                System.out.println("Removing text file " + fp + " because corresponding PDF/DJVU no longer exists");
                 delete = true;
             }
 
