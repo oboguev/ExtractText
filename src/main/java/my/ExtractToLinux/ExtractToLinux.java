@@ -73,7 +73,7 @@ public class ExtractToLinux
             /*
              * Split file name -> basename + extension
              */
-            fd.splitNameExtension("pdf.txt", "djvu.txt", "txt.txt", "htm.txt", "html.txt");
+            fd.splitNameExtension("pdf.txt", "djvu.txt", "txt.txt", "htm.txt", "html.txt", "rtf.txt", "doc.txt", "docx.txt");
             if (fd.extension == null)
             {
                 Util.err("Undefined file : " + srcRootDir + File.separator + fd.pathRelativeToRoot);

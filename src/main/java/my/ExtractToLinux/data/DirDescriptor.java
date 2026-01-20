@@ -42,7 +42,7 @@ public class DirDescriptor
 
     public String targetPath(String rootDir)
     {
-        if (parent == null)
+        if (parent == null || parent.parent == null)
             return rootDir + File.separator + shortname;
         else
             return parent.targetPath(rootDir) + File.separator + shortname;
