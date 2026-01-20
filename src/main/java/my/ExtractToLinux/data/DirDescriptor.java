@@ -1,5 +1,6 @@
 package my.ExtractToLinux.data;
 
+import java.io.File;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,6 +39,16 @@ public class DirDescriptor
     {
         return pathRelativeToRoot;
     }
+
+    public String targetPath(String rootDir)
+    {
+        if (parent == null)
+            return rootDir + File.separator + shortname;
+        else
+            return parent.targetPath(rootDir) + File.separator + shortname;
+    }
+
+    /* ============================================================================================== */
 
     public static DirDescriptor enumerateFileTree(String rootDirPath) throws Exception
     {

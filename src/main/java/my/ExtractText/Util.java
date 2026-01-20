@@ -27,6 +27,8 @@ import java.io.*;
 public class Util
 {
     public static String EOL;
+    public static Boolean True = true;
+    public static Boolean False = false;
 
     static
     {
@@ -546,7 +548,7 @@ public class Util
         String line;
 
         try (FileReader fileReader = new FileReader(path);
-             BufferedReader bufferedReader = new BufferedReader(fileReader))
+                BufferedReader bufferedReader = new BufferedReader(fileReader))
         {
             while (null != (line = bufferedReader.readLine()))
             {

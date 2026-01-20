@@ -1,7 +1,7 @@
 package my.ExtractToLinux.data;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.InvalidPathException;
 import java.time.Instant;
 
 import my.ExtractText.Util;
@@ -45,6 +45,13 @@ public class FileDescriptor
     {
         return pathRelativeToRoot;
     }
+
+    public String targetPath(String rootDir)
+    {
+        return parent.targetPath(rootDir) + File.separator + shortname;
+    }
+
+    /* =========================================================================== */
 
     public void splitNameExtension(String... extensions)
     {

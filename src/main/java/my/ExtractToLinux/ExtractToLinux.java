@@ -2,6 +2,10 @@ package my.ExtractToLinux;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,9 +36,14 @@ public class ExtractToLinux
                 throw new Exception("Directory does not exist:" + fp2.getAbsolutePath());
 
             String srcRootDir = fp1.getCanonicalPath();
+            String targetRootDir = fp2.getCanonicalPath();
+
             DirDescriptor ddRoot = DirDescriptor.enumerateFileTree(srcRootDir);
             for (DirDescriptor dd : ddRoot.flat())
                 preprocessDir(dd, srcRootDir);
+
+            for (DirDescriptor dd : ddRoot.flat())
+                transferDir(dd, srcRootDir, targetRootDir);
 
             System.out.println("*** Completed");
         }
@@ -170,6 +179,8 @@ public class ExtractToLinux
         }
     }
 
+    /* ==================================================================================== */
+
     private static String[] ocr2Suffixes = { " - OCR2" };
     private static String[] ocrSuffixes = { " - OCR", " (OCR)", "-OCR", " - OOCR", " - OCRed", " [OCR]", ", OCR)" };
     private static String[] rawSuffixes = { " - RAW", " (RAW)", "-RAW", " [RAW]", ", RAW)" };
@@ -177,4 +188,50 @@ public class ExtractToLinux
     private static final int MAX_LINIX_FILE_NAME = 255;
 
     /* ==================================================================================== */
+
+    private static void transferDir(DirDescriptor dd, String srcRootDir, String targetRootDir) throws Exception
+    {
+        for (FileDescriptor fd : dd.containedFiles.values())
+            transferFile(fd, srcRootDir, targetRootDir);
+    }
+
+    private static void transferFile(FileDescriptor fd, String srcRootDir, String targetRootDir) throws Exception
+    {
+        String srcFilePath = srcRootDir + File.separator + fd.pathRelativeToRoot;
+        String targetFilePath = fd.targetPath(targetRootDir);
+
+        File fpSrc = new File(srcFilePath).getCanonicalFile();
+        File fpTarget = new File(targetFilePath).getCanonicalFile();
+
+        if (fpTarget.exists())
+        {
+            BasicFileAttributes attrs = Files.readAttributes(fpTarget.toPath(), BasicFileAttributes.class);
+            Instant lastModifiedTime = attrs.lastModifiedTime().toInstant();
+            if (!lastModifiedTime.isBefore(fd.lastModifiedTime))
+                return;
+        }
+
+        if (fpTarget.getParentFile().isDirectory())
+        {
+            // directory already exists
+        }
+        else if (fpTarget.getParentFile().exists())
+        {
+            throw new Exception("File is not a directory: " + fpTarget.getParentFile().getCanonicalPath());
+        }
+        else if (!fpTarget.getParentFile().mkdirs())
+        {
+            throw new Exception("Unable to create directory: " + fpTarget.getParentFile().getCanonicalPath());
+        }
+
+        if (Util.True)
+        {
+            Files.copy(fpSrc.toPath(),
+                       fpTarget.toPath(),
+                       StandardCopyOption.REPLACE_EXISTING,
+                       StandardCopyOption.COPY_ATTRIBUTES);
+        }
+
+        Util.out(srcFilePath + " => " + targetFilePath);
+    }
 }
